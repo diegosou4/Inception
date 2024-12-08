@@ -7,11 +7,14 @@ services:
       - "80:80"
     volumes:
       - ./requirements/nginx/conf:/etc/nginx/conf.d
+    networks:
+      - inception
     restart: always
     depends_on:
       - mariadb
 
   mariadb:
+    container_name : mariadebezinha
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
@@ -23,6 +26,10 @@ services:
     secrets:
       - db_password
       - db_root_password
+    networks:
+      - inception
+    env_file:
+      - .env
     restart: always
 
 secrets:
@@ -30,3 +37,6 @@ secrets:
     file: ./secrets/db_password.txt
   db_root_password:
     file: ./secrets/db_root_password.txt
+
+networks:
+  inception:

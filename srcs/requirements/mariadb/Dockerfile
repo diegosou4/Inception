@@ -3,16 +3,17 @@ LABEL maintainer='Diegmore'
 
 RUN apt-get update && \
     apt-get upgrade -y &&\
-    apt-get install mariadb-server -y
+    apt-get install -y mariadb-server 
+
+RUN mkdir app && mkdir -p /run/mysqld && \
+    touch /run/mysqld/mysqld.sock
+
 
 COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/.
-COPY init.sql /etc/mysql/init.sql
+COPY ./conf/my.cnf /etc/.
+COPY setenv.sh /
+RUN chmod +x /setenv.sh
+ENTRYPOINT ["sh" ,"./setenv.sh"]
 
-RUN mkdir /run/mysqld/
 
-RUN --mount=type=secret,id=db_password,required --mount=type=secret,id=db_root_password,required \
-
- 
-CMD ["mysqld_safe"]
-
-EXPOSE 3307
+EXPOSE 3306
