@@ -31,7 +31,22 @@ services:
     env_file:
       - .env
     restart: always
-
+  wordpress:
+    container_name : wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    ports: 
+      - 9000:9000
+    volumes:
+      - ./requirements/wordpress/conf:/var/www/html
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always
+    depends_on:
+      - mariadb
 secrets:
   db_password:
     file: ./secrets/db_password.txt

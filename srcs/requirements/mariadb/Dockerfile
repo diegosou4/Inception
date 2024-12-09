@@ -14,6 +14,6 @@ COPY ./conf/my.cnf /etc/.
 COPY setenv.sh /
 RUN chmod +x /setenv.sh
 ENTRYPOINT ["sh" ,"./setenv.sh"]
-
+CMD ["mysqld_safe"]
 
 EXPOSE 3306

@@ -3,9 +3,9 @@ LABEL maintainer='Diegmore'
 
 RUN apt update && \
     apt upgrade &&\
-    apt-get install -y php7.4-fpm 
+    apt-get install -y php &&\
+    apt-get install -y php-fpm
+    
 
-COPY "./script.sh" "/"
 
-RUN chmod 777 ./script.sh
-CMD ["bash", "script.sh"]
+CMD ["tail", "-f", "/dev/null"]
