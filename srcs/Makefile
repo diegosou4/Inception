@@ -5,11 +5,16 @@
 
 
 build :
-	docker compose up --build
+	@docker compose up --build
 bashdb :
-	docker container exec -it mariadebezinha bash
+	echo "Entrando no bash da mariadb"
+	@docker container exec -it mariadebezinha bash
 bashnginx:
-	docker container exec -it srcs-nginx-1 bash
+	echo "Entrando no bash do nginx"
+	@docker container exec -it nginx bash
+bashwp:
+	echo "Entrando no bash do wordpress"
+	@docker container exec -it wordpress bash
 stopdb:
 	docker container stop mariadebezinha
 rmdb:
