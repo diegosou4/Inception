@@ -10,10 +10,32 @@ services:
       - ./requirements/web:/var/www/html
     networks:
       - inception
-    restart: always
+    restart: on-failure
+    depends_on:
+      - wordpress
+
+  wordpress:
+    container_name : wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    ports: 
+      - "9000:9000"
+    volumes:
+      - ./requirements/web:/var/www/html
+    environment:
+      WP_DB_HOST: mariadb:3306
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - db_password
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: on-failure
     depends_on:
       - mariadb
-
+      
   mariadb:
     container_name : mariadebezinha
     build:
@@ -32,22 +54,6 @@ services:
     env_file:
       - .env
     restart: always
-  wordpress:
-    container_name : wordpress
-    build:
-      context: ./requirements/wordpress/
-      dockerfile: Dockerfile
-    ports: 
-      - 9000:9000
-    volumes:
-      - ./requirements/web:/var/www/html
-    networks:
-      - inception
-    env_file:
-      - .env
-    restart: always
-    depends_on:
-      - mariadb
 secrets:
   db_password:
     file: ./secrets/db_password.txt
