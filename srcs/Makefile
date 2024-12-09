@@ -19,3 +19,8 @@ stopdb:
 	docker container stop mariadebezinha
 rmdb:
 	docker container rm -f mariadebezinha
+rmwp:
+	docker container rm -f wordpress
+rmnginx:
+	docker container rm -f nginx
+rmall: rmdb rmwp rmnginx

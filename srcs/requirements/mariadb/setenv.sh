@@ -1,9 +1,6 @@
 
 MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
 MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
-echo $MYSQL_USER
-echo $MYSQL_PASSWORD
-echo $MYSQL_ROOT_PASSWORD
 
 if [ ! -f /var/lib/mysql/.initialized ]; then
   # Comandos de configuração
