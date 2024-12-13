@@ -5,7 +5,7 @@ services:
       context: ./requirements/nginx  
       dockerfile: Dockerfile
     ports: 
-      - "80:80"
+      - "443:443"
     volumes:
       - ./requirements/web:/var/www/html
     networks:
@@ -62,3 +62,4 @@ secrets:
 
 networks:
   inception:
+    driver: bridge

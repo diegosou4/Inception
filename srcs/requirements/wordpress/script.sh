@@ -15,15 +15,15 @@ cd /var/www/html
                          --dbhost=$WP_DB_HOST \
                          --allow-root
 
-        wp core install --url=$DOMAIN_NAME \
-                        --title=$WP_TITLE \
-                        --admin_user=$WP_ADMIN \
-                        --admin_password=$WP_PASSWORD \
-                        --admin_email=$WP_EMAILADMIN \
-                        --allow-root
-        wp user create $WP_WP_USER $WP_EMAIL \
-                        --role=editor --user_pass=$WP_PASSWORD \
-                        --allow-root
+        # wp core install --url=$DOMAIN_NAME \
+        #                 --title=$WP_TITLE \
+        #                 --admin_user=$WP_ADMIN \
+        #                 --admin_password=$WP_PASSWORD \
+        #                 --admin_email=$WP_EMAILADMIN \
+        #                 --allow-root
+        # wp user create $WP_WP_USER $WP_EMAIL \
+        #                 --role=editor --user_pass=$WP_PASSWORD \
+        #                 --allow-root
     fi
 
 
