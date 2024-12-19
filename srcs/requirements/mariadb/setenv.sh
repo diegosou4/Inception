@@ -1,6 +1,4 @@
 
-MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
-MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
 
 if [ ! -f /var/lib/mysql/.initialized ]; then
   # Comandos de configuração
@@ -8,6 +6,8 @@ if [ ! -f /var/lib/mysql/.initialized ]; then
   service mariadb start
   sleep 1
 
+  MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
+  MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
   mysql -u root <<EOF
     CREATE USER IF NOT EXISTS 'root'@'localhost' IDENTIFIED BY '$MYSQL_ROOT_PASSWORD';
     FLUSH PRIVILEGES;
@@ -20,6 +20,10 @@ EOF
   touch /var/lib/mysql/.initialized
   service mariadb stop
   sleep 1
+  rm -rf MYSQL_PASSWORD_FILE
+  rm -rf MYSQL_ROOT_PASSWORD_FILE
+  MYSQL_PASSWORD=''
+  MYSQL_ROOT_PASSWORD=''
 else
   echo "MariaDB já foi inicializado."
 fi
