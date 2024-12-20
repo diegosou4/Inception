@@ -13,7 +13,6 @@ services:
     restart: on-failure
     depends_on:
       - wordpress
-
   wordpress:
     container_name : wordpress
     build:
@@ -26,7 +25,12 @@ services:
     environment:
       WP_DB_HOST: mariadb:3306
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
+      MYSQL_EDITOR_PASSWORD_FILE: /run/secrets/db_editor_password
+      REDIS_HOST: redis
     secrets:
+      - db_admin_password
+      - db_editor_password
       - db_password
     networks:
       - inception
@@ -35,7 +39,31 @@ services:
     restart: on-failure
     depends_on:
       - mariadb
-      
+      - redis
+  postfix:
+    container_name: postfix
+    build:
+      context: ./requirements/bonus/postfix/
+      dockerfile: Dockerfile
+    ports:
+      - "25:25"
+    environment:
+      POSTPASS: /run/secrets/post_password
+    secrets:
+      - post_password
+    networks:
+      - inception
+    restart: on-failure
+  redis:
+    container_name : redis
+    build:
+      context: ./requirements/bonus/redis/
+      dockerfile: Dockerfile
+    ports:
+      - "6379:6379"
+    networks:
+      - inception
+    restart: always
   mariadb:
     container_name : mariadebezinha
     build:
@@ -55,6 +83,12 @@ services:
       - .env
     restart: always
 secrets:
+  post_password:
+    file: ./secrets/post_password.txt
+  db_editor_password:
+    file: ./secrets/db_editor_password.txt
+  db_admin_password:
+    file: ./secrets/db_admin_password.txt
   db_password:
     file: ./secrets/db_password.txt
   db_root_password:
