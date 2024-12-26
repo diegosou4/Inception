@@ -36,6 +36,7 @@ cd /var/www/html
         wp config set 'WP_CACHE' true --add --type=constant --allow-root
         wp plugin install redis-cache --activate --allow-root
         wp redis enable --allow-root
+        
         chmod 777 -R /var/www/html/wp-content
         chown -R www-data:www-data /var/www/html
         echo "Wordpress setup complete"

@@ -6,7 +6,8 @@ RUN echo "postfix postfix/mailname string diegmore.42.fr" | debconf-set-selectio
 
 RUN apt-get update && \
     apt-get upgrade -y && \
-    apt install postfix mailutils ca-certificates mutt -y
+    apt install postfix mailutils ca-certificates mutt -y &&\
+    apt-get install -y nano
 
 COPY ./conf/main.cf /etc/postfix/main.cf
 COPY ./conf/sasl_passwd /etc/postfix/sasl_passwd
