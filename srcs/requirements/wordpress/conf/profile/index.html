@@ -3,6 +3,7 @@
 <head>
    
     <link href="bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link href="sytle.css" rel="stylesheet">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Profile Web</title>
@@ -157,9 +158,39 @@
           </div>
           <hr class="featurette-divider">
         </div>
+        <div class="contact_wrapper">
+          <div class="container">
+              <div class="form_wrap">
+                  <form>
+                      <div class="row">
+                          <div class="col-12 text-center">
+                              <h2 class="head_text">Get In Touch</h2>
+                          </div>
+                          <div class="col-lg-4 col-sm-6">
+                              <input class="input_info" id="name-customer" type="text" placeholder="Your Name">
+                          </div>
+                          <div class="col-lg-4 col-sm-6">
+                              <input class="input_info" id="email-customer" type="text" placeholder="Your Email">
+                          </div>
+                          <div class="col-lg-4 col-md-12">
+                              <input class="input_info custom_mt" id="sbj-mail" type="text" placeholder="Your Subject">
+                          </div>
+                          <div class="col-12">
+                              <textarea class="input_info textarea_info mt_30" id="msg-mail" placeholder="Your Message"></textarea>
+                              <div class="text-center">
+                                  <button type="button" id="sbt-button" class="make_btn mt_30">Send Message</button>
+                              </div>
+                          </div>
+                      </div>
+                  </form>
+              </div>
+          </div>
+      </div>
         </main>
         <hr class="featurette-divider">
+  
     <div class="container">
+      
     <footer class="py-3 my-4">
       <ul class="nav justify-content-center  pb-3 mb-3">
         <li class="nav-item"><a href="#" class="nav-link px-2 text-body-secondary">Home</a></li>
@@ -170,6 +201,7 @@
     </footer>
   </div>
     </main>
+    <script src="app/index.js"></script>
     <script src="bootstrap/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
