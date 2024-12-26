@@ -7,7 +7,8 @@ RUN apt update && \
     apt-get install -y php-fpm &&\
     apt-get install -y mariadb-client &&\
     apt-get install -y php-mysql &&\
-    apt-get install -y curl
+    apt-get install -y curl &&\
+    apt-get install -y sendemail libio-socket-ssl-perl libnet-ssleay-perl
 
 RUN mkdir -p /run/php && chown www-data:www-data /run/php
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/.
