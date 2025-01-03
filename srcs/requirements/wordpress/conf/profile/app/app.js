@@ -1,5 +1,5 @@
 
-
+console.log("app.js loaded");
 
 document.getElementById('sbt-button').addEventListener('click', sendmail);
 
@@ -11,11 +11,29 @@ function sendmail()
     let subject = document.getElementById('sbj-mail').value;
     let message = document.getElementById('msg-mail').value;
 
-    if (name == "" || email == "" || subject == "" || message == "")
-    {
-        alert("Please fill all fields");
-        return;
-    }
     console.log(name, email, subject, message);
     console.log("sending mail");
+ 
+    fetch('https://172.18.0.5:5002/', {
+      
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+            from: email,
+            to: 'diegoaguia31@gmail.com',
+            subject: subject,
+            message: message
+        })
+    })
+    .then(response => response.text())
+    .then(data => {
+        console.log(response.text());
+        alert(data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        alert('Error sending email');
+    });
 }

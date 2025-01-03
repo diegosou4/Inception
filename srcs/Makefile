@@ -26,6 +26,10 @@ bashpostfix:
 	echo "Entering postfix bash"
 	@docker container exec -it postfix bash
 
+bashftpserver:
+	echo "Entering ftpserver bash"
+	@docker container exec -it ftpserver bash
+
 stopdb:
 	echo "Stopping mariadb"
 	@docker container stop mariadebezinha
@@ -46,6 +50,10 @@ stoppostfix:
 	echo "Stopping postfix"
 	@docker container stop postfix
 
+stopnodejs:
+	echo "Stopping nodejs"
+	@docker container stop nodejs
+
 rmdb:
 	@docker container rm -f mariadebezinha
 
@@ -61,6 +69,12 @@ rmredis:
 rmpostfix:
 	@docker container rm -f postfix
 
-stopall: stopdb stopwp stopnginx stopredis stoppostfix
+rmnodejs:
+	@docker container rm -f nodejs
+	
+rmftpserver:
+	@docker container rm -f ftpserver
 
-rmall: rmdb rmwp rmnginx rmredis rmpostfix
+stopall: stopdb stopwp stopnginx stopredis stoppostfix stopnodejs
+
+rmall: rmdb rmwp rmnginx rmredis rmpostfix rmnodejs rmftpserver

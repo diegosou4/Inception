@@ -23,6 +23,7 @@ services:
     volumes:
       - ./requirements/web:/var/www/html
     environment:
+      NODEJS_HOST: nodejs
       WP_DB_HOST: mariadb:3306
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
       MYSQL_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
@@ -40,6 +41,42 @@ services:
     depends_on:
       - mariadb
       - redis
+      - nodejs
+      - postfix
+  ftpserver:
+    container_name: ftpserver
+    build:
+      context: ./requirements/bonus/ftpserver/
+      dockerfile: Dockerfile
+    ports:
+      - "21:21"
+    volumes:
+      - ./requirements/web:/var/www/html
+    environment:
+      wordpress_host: wordpress
+      postfix_host: postfix
+      postfix_port: 25
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
+      - postfix
+
+  nodejs:
+    container_name: nodejs
+    build:
+      context: ./requirements/bonus/nodejs/
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      wordpress_host: wordpress
+      postfix_host: postfix
+      postfix_port: 25
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
       - postfix
   postfix:
     container_name: postfix
