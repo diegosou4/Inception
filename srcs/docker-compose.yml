@@ -52,16 +52,17 @@ services:
       - "21:21"
     volumes:
       - ./requirements/web:/var/www/html
+    env_file:
+      - .env
     environment:
-      wordpress_host: wordpress
-      postfix_host: postfix
-      postfix_port: 25
+      PASSFTP : /run/secrets/ftp_password
+    secrets:
+      - ftp_password
     networks:
       - inception
     restart: on-failure
     depends_on:
       - postfix
-
   nodejs:
     container_name: nodejs
     build:
@@ -133,6 +134,8 @@ secrets:
     file: ./secrets/db_password.txt
   db_root_password:
     file: ./secrets/db_root_password.txt
+  ftp_password:
+    file: ./secrets/ftp_password.txt
 
 networks:
   inception:
