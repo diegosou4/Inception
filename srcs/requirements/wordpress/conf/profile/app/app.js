@@ -14,7 +14,7 @@ function sendmail()
     console.log(name, email, subject, message);
     console.log("sending mail");
  
-    fetch('https://172.18.0.6:5002/', {
+    fetch('/api', {
       
         method: 'POST',
         headers: {

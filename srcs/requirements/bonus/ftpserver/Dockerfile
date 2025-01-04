@@ -11,8 +11,6 @@ RUN apt-get update && \
 COPY ./tools/config.sh  /.
 COPY ./conf/vsftpd.conf /tmp/.
 
-
-
 RUN chmod +x /config.sh
 ENTRYPOINT [ "sh" , "./config.sh" ]
 

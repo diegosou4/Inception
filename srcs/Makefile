@@ -75,6 +75,8 @@ rmnodejs:
 rmftpserver:
 	@docker container rm -f ftpserver
 
+
+
 stopall: stopdb stopwp stopnginx stopredis stoppostfix stopnodejs
 
 rmall: rmdb rmwp rmnginx rmredis rmpostfix rmnodejs rmftpserver

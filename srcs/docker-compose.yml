@@ -13,6 +13,27 @@ services:
     restart: on-failure
     depends_on:
       - wordpress
+      - nodejs
+  ftpserver:
+    container_name: ftpserver
+    build:
+      context: ./requirements/bonus/ftpserver/
+      dockerfile: Dockerfile
+    ports:
+      - "21:21"
+    volumes:
+      - ./requirements/web:/var/www/html
+    env_file:
+      - .env
+    environment:
+      PASSFTP : /run/secrets/ftp_password
+    secrets:
+      - ftp_password
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
+      - wordpress
   wordpress:
     container_name : wordpress
     build:
@@ -42,26 +63,6 @@ services:
       - mariadb
       - redis
       - nodejs
-      - postfix
-  ftpserver:
-    container_name: ftpserver
-    build:
-      context: ./requirements/bonus/ftpserver/
-      dockerfile: Dockerfile
-    ports:
-      - "21:21"
-    volumes:
-      - ./requirements/web:/var/www/html
-    env_file:
-      - .env
-    environment:
-      PASSFTP : /run/secrets/ftp_password
-    secrets:
-      - ftp_password
-    networks:
-      - inception
-    restart: on-failure
-    depends_on:
       - postfix
   nodejs:
     container_name: nodejs

@@ -3,7 +3,7 @@ const app = express();
 const cors = require('cors');
 
 const fs = require("fs");
-const https = require("https");
+const http = require("http");
 const querystring = require('querystring');
 // Verbos HTTP   
 // GET
@@ -25,7 +25,7 @@ const options = {
 //     res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
 //     next();
 // }
-https.createServer(options, (req, res) => {
+http.createServer(options, (req, res) => {
     res.writeHead(200);
     
     if(req.method === 'POST'){
@@ -67,18 +67,12 @@ https.createServer(options, (req, res) => {
 // });
 
 
-// app.post('/', (req, res) => {
-//     const { from, to, subject, message } = req.body;
+app.post('/', (req, res) => {
+    console.log('Received POST request');
+    res.send('Post request received');
+});
 
-//     if (!from || !to || !subject || !message) {
-//         return res.status(400).send('All fields are required');
-//     }
-//     res.send('Email sent successfully');
-// });
 
-// app.listen(5002, () => {    
-//     console.log('Server is running on http://localhost:5002');
-// });
 
 // function sendEmail(email, subject, message) {
 
