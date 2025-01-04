@@ -16,9 +16,9 @@ app.use(express.json());
 
 
 app.post('/api', (req, res) => {
-    const { from, to, subject, message } = req.body;
+    let { name ,from, to, subject, message } = req.body;
     const email = "diegoaguia33@gmail.com";
-    if(!from || !to || !subject || !message) {
+    if( !name ||!from || !to || !subject || !message) {
         res.status(400).send('Missing parameters');
         return;
     }
@@ -27,12 +27,15 @@ app.post('/api', (req, res) => {
     console.log('To:', to);
     console.log('Subject:', subject);
     console.log('Message:', message);
+    message = message + " " + from + " " + name;
     exec(`sendemail -s postfix:25 -f ${email} -t ${to} -u ${subject} -m ${message}`, (err, stdout, stderr) => {
         if(err) {
             console.error('Sendmail error:', err);
+            console.error('stderr:', stderr);
             res.send('Error sending email');
             return;
         }
+        console.log('stdout:', stdout);
         res.status(200).send('Email sent successfully');
     });
 });

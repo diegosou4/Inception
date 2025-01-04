@@ -4,6 +4,14 @@ console.log("app.js loaded");
 document.getElementById('sbt-button').addEventListener('click', sendmail);
 
 
+function validateEmail(email)
+{
+    const regex = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,6}$/;
+
+    return regex.test(email);
+
+}
+
 function sendmail()
 {
     let name = document.getElementById('name-customer').value;   
@@ -11,15 +19,19 @@ function sendmail()
     let subject = document.getElementById('sbj-mail').value;
     let message = document.getElementById('msg-mail').value;
 
-    console.log(name, email, subject, message);
-    console.log("sending mail");
- 
+    
+    if(validateEmail(email) == false)
+    {
+        alert('Invalid email');
+        return;
+    }
     fetch('/api', {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
         body: JSON.stringify({
+            name: name,
             from: email,
             to: 'diegoaguia31@gmail.com',
             subject: subject,
