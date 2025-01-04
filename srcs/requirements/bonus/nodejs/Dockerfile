@@ -4,7 +4,8 @@ LABEL maintainer='Diegmore'
 RUN apt-get update && \
     apt-get upgrade -y && \
     apt-get install nodejs -y &&\
-    apt-get install openssl -y
+    apt-get install openssl -y &&\
+    apt-get install -y sendemail libio-socket-ssl-perl libnet-ssleay-perl
 
 
 

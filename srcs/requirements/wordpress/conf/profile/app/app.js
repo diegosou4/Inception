@@ -15,7 +15,6 @@ function sendmail()
     console.log("sending mail");
  
     fetch('/api', {
-      
         method: 'POST',
         headers: {
             'Content-Type': 'application/json'
@@ -29,7 +28,7 @@ function sendmail()
     })
     .then(response => response.text())
     .then(data => {
-        console.log(response.text());
+        console.log(data); 
         alert(data);
     })
     .catch(error => {
