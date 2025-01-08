@@ -1,9 +1,10 @@
 const express = require("express");
 const app = express();
 const { exec } = require('child_process');
-const fs = require("fs");
-const http = require("http");
-const querystring = require('querystring');
+const path = require('path');
+const fs = require('fs');
+
+
 // Verbos HTTP   
 // GET
 // POST
@@ -12,6 +13,25 @@ const querystring = require('querystring');
 
 app.use(express.json());
 
+app.get('/api', (req, res) => {
+    console.log('Received GET request at /api');
+    exec('wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/oi.txt', (err, stdout, stderr) => {
+    
+        if(err) {
+            console.error('wget error:', err);
+            console.error('stderr:', stderr);
+            res.send('Error downloading file');
+            return;
+        }
+        console.log('stdout:', stdout);
+        let file = fs.readFileSync('oi.txt', 'utf8');
+        let filePath =  'oi.txt';
+        console.log('File path:', filePath);
+        console.log('File content:', file);
+        res.sendFile(filePath);
+    });
+    res.send('Hello from the server');
+});
 
 
 
@@ -43,4 +63,3 @@ app.post('/api', (req, res) => {
 app.listen(5002 , () => {
     console.log('Server running on port 5002');
 });
-

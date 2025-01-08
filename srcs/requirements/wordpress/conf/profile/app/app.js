@@ -1,8 +1,32 @@
+const { response } = require("express");
 
 console.log("app.js loaded");
 
 document.getElementById('sbt-button').addEventListener('click', sendmail);
+document.getElementById('get-mycv').addEventListener('click', getCV);
 
+function getCV()
+{
+    console.log('getCV');   
+    fetch('/api', {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => response.blob())
+    .then(blob => {
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'ola.txt'; // Nome do arquivo
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        window.URL.revokeObjectURL(url);
+    });
+    
+}
 
 function validateEmail(email)
 {
