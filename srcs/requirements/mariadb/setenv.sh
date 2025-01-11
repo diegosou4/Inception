@@ -1,11 +1,13 @@
 
-
-if [ ! -f /var/lib/mysql/.initialized ]; then
+if ! mysqladmin ping -h "localhost" --silent; then
   # Comandos de configuração
-  echo "Configurando MariaDB..."
+  if [ -f "/var/lib/mysql/my.cnf" ]; then
+    echo "Configurando MariaDB.."
+    mv /var/lib/mysql/my.cnf /usr/my.cnf
+  fi
+  echo "Iniciando MariaDB.."
   service mariadb start
   sleep 1
-
   MYSQL_PASSWORD=$(cat "$MYSQL_PASSWORD_FILE")
   MYSQL_ROOT_PASSWORD=$(cat "$MYSQL_ROOT_PASSWORD_FILE")
   mysql -u root <<EOF
@@ -17,17 +19,12 @@ if [ ! -f /var/lib/mysql/.initialized ]; then
     FLUSH PRIVILEGES;
     SHUTDOWN;
 EOF
-  touch /var/lib/mysql/.initialized
   service mariadb stop
   sleep 1
-  rm -rf MYSQL_PASSWORD_FILE
-  rm -rf MYSQL_ROOT_PASSWORD_FILE
   MYSQL_PASSWORD=''
   MYSQL_ROOT_PASSWORD=''
 else
   echo "MariaDB já foi inicializado."
 fi
-
-echo "Iniciando MariaDB..."
 
 mysqld_safe --bind-address=0.0.0.0 --port=3306

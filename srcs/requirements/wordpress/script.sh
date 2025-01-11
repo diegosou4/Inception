@@ -12,6 +12,13 @@ cd /var/www/html
         mv wp-cli.phar /usr/local/bin/wp
         sleep 3
         mv /temp/* /var/www/html/
+
+        while ! mysqladmin ping -h $HOST_DB -P $PORT_DB --silent; do
+            echo "Waiting for MariaDB to be ready..."
+            sleep 2
+        done
+
+
         wp core download --allow-root
         wp config create --dbname=$MYSQL_DATABASE \
                          --dbuser=$MYSQL_USER \

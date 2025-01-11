@@ -7,7 +7,7 @@ services:
     ports: 
       - "443:443"
     volumes:
-      - ./requirements/web:/var/www/html
+      - wordpress_volume:/var/www/html
     networks:
       - inception
     restart: on-failure
@@ -42,10 +42,12 @@ services:
     ports: 
       - "9000:9000"
     volumes:
-      - ./requirements/web:/var/www/html
+      - wordpress_volume:/var/www/html
     environment:
       NODEJS_HOST: nodejs
       WP_DB_HOST: mariadb:3306
+      HOST_DB: mariadb
+      PORT_DB: 3306
       MYSQL_PASSWORD_FILE: /run/secrets/db_password
       MYSQL_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
       MYSQL_EDITOR_PASSWORD_FILE: /run/secrets/db_editor_password
@@ -90,7 +92,9 @@ services:
       - "25:25"
     environment:
       POSTPASS: /run/secrets/post_password
+      POSTMAIL: /run/secrets/mail_password
     secrets:
+      - mail_password
       - post_password
     networks:
       - inception
@@ -108,7 +112,9 @@ services:
       - inception
     restart: always
   mariadb:
-    container_name : mariadebezinha
+    container_name : mariadb
+    volumes:
+      - mariadb_volume:/var/lib/mysql
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
@@ -138,7 +144,24 @@ secrets:
     file: ./secrets/db_root_password.txt
   ftp_password:
     file: ./secrets/ftp_password.txt
+  mail_password:
+    file: ./secrets/mail_password.txt
 
 networks:
   inception:
     driver: bridge
+
+volumes:
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/data/wordpress
+      o: bind
+
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/data/mariadb
+      o: bind
