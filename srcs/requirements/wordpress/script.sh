@@ -17,8 +17,6 @@ cd /var/www/html
             echo "Waiting for MariaDB to be ready..."
             sleep 2
         done
-
-
         wp core download --allow-root
         wp config create --dbname=$MYSQL_DATABASE \
                          --dbuser=$MYSQL_USER \
@@ -36,6 +34,13 @@ cd /var/www/html
         wp user create $WP_EDITOR $WP_EDITOR_EMAIL \
                         --role=editor --user_pass=$WP_EDITOR_PASS \
                         --allow-root
+
+        wget https://github.com/vrana/adminer/releases/download/v4.8.1/adminer-4.8.1-mysql.php -O /var/www/html/adminer.php
+        while [ ! -f "/var/www/html/adminer.php" ]; do
+            echo "Waiting for adminer.php to be downloaded..."
+            sleep 4
+        done
+        chmod 755 -R /var/www/html/adminer.php
         # Configuracao do Redis
         wp config set 'WP_REDIS_HOST' $REDIS_HOST --add --type=constant --allow-root
         wp config set 'WP_REDIS_PORT' $REDIS_PORT --add --type=constant --allow-root
@@ -43,7 +48,7 @@ cd /var/www/html
         wp config set 'WP_CACHE' true --add --type=constant --allow-root
         wp plugin install redis-cache --activate --allow-root
         wp redis enable --allow-root
-        
+        wp plugin update --all --allow-root
         chmod 777 -R /var/www/html/wp-content
         chown -R www-data:www-data /var/www/html
         echo "Wordpress setup complete"

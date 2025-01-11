@@ -8,6 +8,7 @@ RUN apt update && \
     apt-get install -y mariadb-client &&\
     apt-get install -y php-mysql &&\
     apt-get install -y curl &&\
+    apt-get install -y wget &&\
     apt-get install -y sendemail libio-socket-ssl-perl libnet-ssleay-perl &&\ 
     apt-get install -y iputils-ping 
 

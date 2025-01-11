@@ -1,9 +1,17 @@
 # My Make file
 
+
+
+BOLD = \033[1m
+RESET = \033[0m
+BLUE = \033[34m
+RED = \033[31m
+
 WHOIAM := $(shell whoami)
 mariadb_volumes = /home/${WHOIAM}/data/mariadb
 wordpress_volumes = /home/${WHOIAM}/data/wordpress
 compose_docker = srcs/docker-compose.yml
+
 
 
 build :
@@ -13,12 +21,12 @@ build :
 	if [ ! -d ${wordpress_volumes} ]; then \
 		mkdir -p ${wordpress_volumes};\
 	fi
-	echo "Building the containers"
+	@echo "$(BLUE)Building the containers$(NC)"
 	@docker compose -f ${compose_docker} up --build
 
 bashdb :
 	echo "Entering mariadb bash"
-	@docker container exec -it mariadebezinha bash
+	@docker container exec -it mariadb bash
 
 bashnginx:
 	echo "Entering ngnix bash"
@@ -42,7 +50,7 @@ bashftpserver:
 
 stopdb:
 	echo "Stopping mariadb"
-	@docker container stop mariadebezinha
+	@docker container stop mariadb
 
 stopwp:
 	echo "Stopping wordpress"
@@ -65,7 +73,7 @@ stopnodejs:
 	@docker container stop nodejs
 
 rmdb:
-	@docker container rm -f mariadebezinha
+	@docker container rm -f mariadb
 
 rmwp:
 	@docker container rm -f wordpress
