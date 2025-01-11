@@ -15,7 +15,9 @@ app.use(express.json());
 
 app.get('/api', (req, res) => {
     console.log('Received GET request at /api');
-    exec('wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/oi.txt', (err, stdout, stderr) => {
+    const filePath = path.join(__dirname, '../../files/oi.txt');
+    fs.mkdirSync(path.dirname(filePath), { recursive: true });
+    exec(`wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/oi.txt -O ${filePath}`, (err, stdout, stderr) => {
     
         if(err) {
             console.error('wget error:', err);
@@ -23,16 +25,12 @@ app.get('/api', (req, res) => {
             res.send('Error downloading file');
             return;
         }
-        console.log('stdout:', stdout);
-        let file = fs.readFileSync('oi.txt', 'utf8');
-        let filePath =  'oi.txt';
         console.log('File path:', filePath);
-        console.log('File content:', file);
-        res.sendFile(filePath);
+        res.status(200).json({ fp: filePath, Namefile: 'oi.txt' });
     });
-    res.send('Hello from the server');
 });
 
+app.use('/files', express.static(path.join(__dirname, '../../files')));
 
 
 app.post('/api', (req, res) => {

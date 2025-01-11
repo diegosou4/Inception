@@ -1,31 +1,39 @@
-const { response } = require("express");
+
 
 console.log("app.js loaded");
 
 document.getElementById('sbt-button').addEventListener('click', sendmail);
 document.getElementById('get-mycv').addEventListener('click', getCV);
 
-function getCV()
-{
-    console.log('getCV');   
+function getCV() { 
+    console.log('chamando funcao');
     fetch('/api', {
         method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         }
     })
-    .then(response => response.blob())
-    .then(blob => {
-        const url = window.URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.href = url;
-        link.download = 'ola.txt'; // Nome do arquivo
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        window.URL.revokeObjectURL(url);
+    .then(response => response.json())
+    .then(data => {
+        const filePath = data.fp;
+        const nameFile = data.Namefile;
+        console.log(data.Namefile)
+        console.log(data.fp);
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.style.display = 'none';
+                a.href = url;
+                a.download = nameFile;
+                console.log(nameFile);
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                alert('CV downloaded successfully');
+            })
+    .catch(error => {
+        console.error('There was a problem with the fetch operation:', error);
+        alert('Error downloading CV');
     });
-    
 }
 
 function validateEmail(email)
