@@ -15,19 +15,14 @@ function getCV() {
     })
     .then(response => response.json())
     .then(data => {
-        const filePath = data.fp;
-        const nameFile = data.Namefile;
-        console.log(data.Namefile)
-        console.log(data.fp);
-                const url = window.URL.createObjectURL(blob);
+        const filePath = data.file;
                 const a = document.createElement('a');
                 a.style.display = 'none';
-                a.href = url;
-                a.download = nameFile;
-                console.log(nameFile);
+                a.href = 'https://diegmore.42.fr/' + filePath;
+                a.download = filePath;
                 document.body.appendChild(a);
                 a.click();
-                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
                 alert('CV downloaded successfully');
             })
     .catch(error => {

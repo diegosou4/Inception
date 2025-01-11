@@ -11,6 +11,9 @@ RUN apt-get update && \
 COPY ./tools/config.sh  /.
 COPY ./conf/vsftpd.conf /tmp/.
 
+RUN mkdir -p /var/bd-files
+COPY ./bd-files /var/bd-files/
+RUN chmod -R 777 /var/bd-files  
 RUN chmod +x /config.sh
 ENTRYPOINT [ "sh" , "./config.sh" ]
 

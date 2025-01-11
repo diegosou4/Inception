@@ -26,7 +26,7 @@ cd /var/www/html
                         --admin_email=$WP_ADMIN_EMAIL \
                         --skip-email \
                         --allow-root
-        wp user create $WP_EDITOR $WP_EDITOR_MAIL \
+        wp user create $WP_EDITOR $WP_EDITOR_EMAIL \
                         --role=editor --user_pass=$WP_EDITOR_PASS \
                         --allow-root
         # Configuracao do Redis

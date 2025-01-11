@@ -15,9 +15,9 @@ app.use(express.json());
 
 app.get('/api', (req, res) => {
     console.log('Received GET request at /api');
-    const filePath = path.join(__dirname, '../../files/oi.txt');
+    const filePath = path.join(__dirname, '../files/resume_diego.pdf');
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    exec(`wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/oi.txt -O ${filePath}`, (err, stdout, stderr) => {
+    exec(`wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/resume_diego.pdf -O ${filePath}`, (err, stdout, stderr) => {
     
         if(err) {
             console.error('wget error:', err);
@@ -25,12 +25,17 @@ app.get('/api', (req, res) => {
             res.send('Error downloading file');
             return;
         }
-        console.log('File path:', filePath);
-        res.status(200).json({ fp: filePath, Namefile: 'oi.txt' });
+        res.status(200).json({ file : 'files' });
     });
 });
 
-app.use('/files', express.static(path.join(__dirname, '../../files')));
+app.get('/files', (req, res) => {
+    if(!fs.existsSync(path.join(__dirname, '../files/resume_diego.pdf'))) {
+        res.status(404).send('File not found');
+        return;
+    }
+    res.download(path.join(__dirname, '../files/resume_diego.pdf'));
+});
 
 
 app.post('/api', (req, res) => {

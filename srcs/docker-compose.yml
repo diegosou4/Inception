@@ -50,6 +50,7 @@ services:
       MYSQL_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
       MYSQL_EDITOR_PASSWORD_FILE: /run/secrets/db_editor_password
       REDIS_HOST: redis
+      REDIS_PORT: 6379
     secrets:
       - db_admin_password
       - db_editor_password
