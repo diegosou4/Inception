@@ -36,7 +36,7 @@ server {
     access_log /var/log/nginx/diegmore.42.fr.access.log;
     error_log /var/log/nginx/diegmore.42.fr.error.log;
     root /var/www/html;
-    index  index.html index.php  index.htm;
+    index  index.php index.html  index.htm;
 
     location / {
     # First attempt to serve request as file, then

@@ -9,14 +9,15 @@ cd /var/www/html
         echo "Setting up wordpress"
         curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
         chmod +x wp-cli.phar
-        mv wp-cli.phar /usr/local/bin/wp
-        sleep 3
-        mv /temp/* /var/www/html/
-
+    
         while ! mysqladmin ping -h $HOST_DB -P $PORT_DB --silent; do
             echo "Waiting for MariaDB to be ready..."
             sleep 2
         done
+        sleep 3
+        mv wp-cli.phar /usr/local/bin/wp
+        sleep 3
+
         wp core download --allow-root
         wp config create --dbname=$MYSQL_DATABASE \
                          --dbuser=$MYSQL_USER \

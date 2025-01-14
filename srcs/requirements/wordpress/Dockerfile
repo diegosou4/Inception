@@ -14,7 +14,7 @@ RUN apt update && \
 
 RUN mkdir -p /run/php && chown www-data:www-data /run/php
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/.
-COPY ./conf/profile /temp/.
+# COPY ./conf/profile /temp/.
 COPY script.sh /
 RUN chmod +x /script.sh
 RUN chown -R www-data:www-data /var/www/html
