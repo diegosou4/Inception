@@ -1,0 +1,182 @@
+services: 
+  nginx:
+    container_name : nginx
+    build:
+      context: ./requirements/nginx  
+      dockerfile: Dockerfile
+    ports: 
+      - "443:443"
+    volumes:
+      - wordpress_volume:/var/www/html
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
+      - frontend
+      - wordpress
+      - nodejs
+  ftpserver:
+    container_name: ftpserver
+    build:
+      context: ./requirements/bonus/ftpserver/
+      dockerfile: Dockerfile
+    ports:
+      - "21:21"
+    volumes:
+      - ./requirements/web:/var/www/html
+    env_file:
+      - .env
+    environment:
+      PASSFTP : /run/secrets/ftp_password
+    secrets:
+      - ftp_password
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
+      - wordpress
+  wordpress:
+    container_name : wordpress
+    build:
+      context: ./requirements/wordpress/
+      dockerfile: Dockerfile
+    ports: 
+      - "9000:9000"
+    volumes:
+      - wordpress_volume:/var/www/html
+    environment:
+      NODEJS_HOST: nodejs
+      WP_DB_HOST: mariadb:3306
+      HOST_DB: mariadb
+      PORT_DB: 3306
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+      MYSQL_ADMIN_PASSWORD_FILE: /run/secrets/db_admin_password
+      MYSQL_EDITOR_PASSWORD_FILE: /run/secrets/db_editor_password
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+    secrets:
+      - db_admin_password
+      - db_editor_password
+      - db_password
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: on-failure
+    depends_on:
+      - mariadb
+      - redis
+      - nodejs
+      - postfix
+  nodejs:
+    container_name: nodejs
+    build:
+      context: ./requirements/bonus/nodejs/
+      dockerfile: Dockerfile
+    ports:
+      - "5002:5002"
+    environment:
+      wordpress_host: wordpress
+      postfix_host: postfix
+      postfix_port: 25
+    networks:
+      - inception
+    restart: on-failure
+    depends_on:
+      - postfix
+  postfix:
+    container_name: postfix
+    build:
+      context: ./requirements/bonus/postfix/
+      dockerfile: Dockerfile
+    ports:
+      - "25:25"
+    environment:
+      POSTPASS: /run/secrets/post_password
+      POSTMAIL: /run/secrets/mail_password
+    secrets:
+      - mail_password
+      - post_password
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: on-failure
+  redis:
+    container_name : redis
+    build:
+      context: ./requirements/bonus/redis/
+      dockerfile: Dockerfile
+    ports:
+      - "6379:6379"
+    networks:
+      - inception
+    restart: always
+  mariadb:
+    container_name : mariadb
+    volumes:
+      - mariadb_volume:/var/lib/mysql
+    build:
+      context: ./requirements/mariadb/
+      dockerfile: Dockerfile
+    ports:
+      - "3306:3306"
+    environment:
+      ADMINER_PASSWORD_FILE: /run/secrets/adminer_password
+      MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
+      MYSQL_PASSWORD_FILE: /run/secrets/db_password
+    secrets:
+      - adminer_password
+      - db_password
+      - db_root_password
+    networks:
+      - inception
+    env_file:
+      - .env
+    restart: always
+  frontend:
+    container_name: frontend
+    build:
+      context: ./requirements/bonus/frontend/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - inception
+    restart: on-failure
+secrets:
+  post_password:
+    file: ./secrets/post_password.txt
+  db_editor_password:
+    file: ./secrets/db_editor_password.txt
+  db_admin_password:
+    file: ./secrets/db_admin_password.txt
+  db_password:
+    file: ./secrets/db_password.txt
+  db_root_password:
+    file: ./secrets/db_root_password.txt
+  ftp_password:
+    file: ./secrets/ftp_password.txt
+  mail_password:
+    file: ./secrets/mail_password.txt
+  adminer_password:
+    file: ./secrets/adminer_password.txt
+
+networks:
+  inception:
+    driver: bridge
+
+volumes:
+  wordpress_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/data/wordpress
+      o: bind
+
+  mariadb_volume:
+    driver: local
+    driver_opts:
+      type: none
+      device: /home/$USER/data/mariadb
+      o: bind
