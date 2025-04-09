@@ -7,7 +7,7 @@ if [ ! -f "/etc/postfix/sasl_passwd.db" ]; then
     postconf compatibility_level=2 
     postconf inet_protocols=ipv4
     postmap /etc/postfix/main.cf 
-    echo "$MAIL_PASS" >> /etc/postfix/sasl_passwd
+    echo "[smtp.gmail.com]:587 $MAIL_POSTFIX:$MAIL_PASS" > /etc/postfix/sasl_passwd
     chmod 600 /etc/postfix/sasl_passwd
     postmap /etc/postfix/sasl_passwd
     echo "Postfix configured"

@@ -1,7 +1,7 @@
 FROM debian:bullseye
 LABEL maintainer='Diegmore'
 
-RUN apt update && \
+RUN apt update -y && \
     apt upgrade -y &&\
     apt-get install -y php &&\
     apt-get install -y php-fpm &&\
@@ -14,7 +14,8 @@ RUN apt update && \
 
 RUN mkdir -p /run/php && chown www-data:www-data /run/php
 COPY ./conf/www.conf /etc/php/7.4/fpm/pool.d/.
-COPY ./conf/profile /temp/.
+
+COPY ./conf/profile /var/www/html/profile/.
 COPY script.sh /
 RUN chmod +x /script.sh
 RUN chown -R www-data:www-data /var/www/html

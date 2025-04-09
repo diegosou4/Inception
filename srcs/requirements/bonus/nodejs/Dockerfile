@@ -19,6 +19,8 @@ WORKDIR /app
 
 ENV NODE_TLS_REJECT_UNAUTHORIZED=0
 
-ENTRYPOINT [ "node", "/app/app/index.js"]
+
+ENTRYPOINT ["sh", "script.sh"]
+
 
 EXPOSE 443

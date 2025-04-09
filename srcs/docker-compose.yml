@@ -1,6 +1,8 @@
+
+
 services: 
   nginx:
-    container_name : nginx
+    container_name: nginx
     build:
       context: ./requirements/nginx  
       dockerfile: Dockerfile
@@ -12,22 +14,31 @@ services:
       - inception
     restart: on-failure
     depends_on:
-      - frontend
       - wordpress
       - nodejs
+  frontend:
+    container_name: frontend
+    build:
+      context: ./requirements/bonus/frontend/
+      dockerfile: Dockerfile
+    volumes:
+      - wordpress_volume:/var/www/html
+    networks:
+      - inception
+    depends_on:
+      - wordpress
+    restart: on-failure
   ftpserver:
     container_name: ftpserver
     build:
       context: ./requirements/bonus/ftpserver/
       dockerfile: Dockerfile
-    ports:
-      - "21:21"
     volumes:
       - ./requirements/web:/var/www/html
     env_file:
       - .env
     environment:
-      PASSFTP : /run/secrets/ftp_password
+      PASSFTP: /run/secrets/ftp_password
     secrets:
       - ftp_password
     networks:
@@ -35,13 +46,12 @@ services:
     restart: on-failure
     depends_on:
       - wordpress
+
   wordpress:
-    container_name : wordpress
+    container_name: wordpress
     build:
       context: ./requirements/wordpress/
       dockerfile: Dockerfile
-    ports: 
-      - "9000:9000"
     volumes:
       - wordpress_volume:/var/www/html
     environment:
@@ -68,30 +78,36 @@ services:
       - redis
       - nodejs
       - postfix
+
   nodejs:
     container_name: nodejs
     build:
       context: ./requirements/bonus/nodejs/
       dockerfile: Dockerfile
-    ports:
-      - "5002:5002"
     environment:
       wordpress_host: wordpress
       postfix_host: postfix
       postfix_port: 25
+      user_ftp: ${USER_FTP}
+      personal_email: ${PERSONAL_EMAIL}
+      PASSFTP: /run/secrets/ftp_password
+      mail_postfix: ${MAIL_POSTFIX}
+    secrets:
+      - ftp_password
     networks:
       - inception
     restart: on-failure
     depends_on:
       - postfix
+
   postfix:
     container_name: postfix
     build:
       context: ./requirements/bonus/postfix/
       dockerfile: Dockerfile
-    ports:
-      - "25:25"
     environment:
+      DOMAIN_NAME: ${DOMAIN_NAME}
+      MAIL_POSTFIX : ${MAIL_POSTFIX}
       POSTPASS: /run/secrets/post_password
       POSTMAIL: /run/secrets/mail_password
     secrets:
@@ -99,28 +115,24 @@ services:
       - post_password
     networks:
       - inception
-    env_file:
-      - .env
     restart: on-failure
+
   redis:
-    container_name : redis
+    container_name: redis
     build:
       context: ./requirements/bonus/redis/
       dockerfile: Dockerfile
-    ports:
-      - "6379:6379"
     networks:
       - inception
     restart: always
+
   mariadb:
-    container_name : mariadb
+    container_name: mariadb
     volumes:
       - mariadb_volume:/var/lib/mysql
     build:
       context: ./requirements/mariadb/
       dockerfile: Dockerfile
-    ports:
-      - "3306:3306"
     environment:
       ADMINER_PASSWORD_FILE: /run/secrets/adminer_password
       MYSQL_ROOT_PASSWORD_FILE: /run/secrets/db_root_password
@@ -134,33 +146,24 @@ services:
     env_file:
       - .env
     restart: always
-  frontend:
-    container_name: frontend
-    build:
-      context: ./requirements/bonus/frontend/
-      dockerfile: Dockerfile
-    ports:
-      - "3000:3000"
-    networks:
-      - inception
-    restart: on-failure
+
 secrets:
   post_password:
-    file: ./secrets/post_password.txt
+    file: ../secrets/post_password.txt
   db_editor_password:
-    file: ./secrets/db_editor_password.txt
+    file: ../secrets/db_editor_password.txt
   db_admin_password:
-    file: ./secrets/db_admin_password.txt
+    file: ../secrets/db_admin_password.txt
   db_password:
-    file: ./secrets/db_password.txt
+    file: ../secrets/db_password.txt
   db_root_password:
-    file: ./secrets/db_root_password.txt
+    file: ../secrets/db_root_password.txt
   ftp_password:
-    file: ./secrets/ftp_password.txt
+    file: ../secrets/ftp_password.txt
   mail_password:
-    file: ./secrets/mail_password.txt
+    file: ../secrets/mail_password.txt
   adminer_password:
-    file: ./secrets/adminer_password.txt
+    file: ../secrets/adminer_password.txt
 
 networks:
   inception:
@@ -171,12 +174,12 @@ volumes:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/data/wordpress
+      device: /home/${MY_USERNAME}/data/wordpress
       o: bind
 
   mariadb_volume:
     driver: local
     driver_opts:
       type: none
-      device: /home/$USER/data/mariadb
+      device: /home/${MY_USERNAME}/data/mariadb
       o: bind

@@ -12,4 +12,4 @@ smtp_sasl_tls_security_options = noanonymous
 smtp_tls_security_level = may
 smtp_tls_CAfile = /etc/ssl/certs/ca-certificates.crt
 # Adicional config
-mynetworks= 127.0.0.0/8  172.20.0.0/16
+mynetworks= 127.0.0.0/8  172.18.0.0/16

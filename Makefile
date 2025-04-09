@@ -1,7 +1,4 @@
 # My Make file
-
-
-
 BOLD = \033[1m
 RESET = \033[0m
 BLUE = \033[34m
@@ -48,53 +45,15 @@ bashftpserver:
 	echo "Entering ftpserver bash"
 	@docker container exec -it ftpserver bash
 
-stopdb:
-	echo "Stopping mariadb"
-	@docker container stop mariadb
+bashnode:
+	echo "Entering nodejs bash"
+	@docker container exec -it nodejs bash
 
-stopwp:
-	echo "Stopping wordpress"
-	@docker container stop wordpress
+stop:
+	@docker compose -f ${compose_docker} stop
 
-stopnginx:
-	echo "Stopping nginx"
-	@docker container stop nginx
+rmall: rmvolumes
+	@docker compose -f ${compose_docker} down --rmi all
 
-stopredis:
-	echo "Stopping redis"
-	@docker container stop redis
-
-stoppostfix:
-	echo "Stopping postfix"
-	@docker container stop postfix
-
-stopnodejs:
-	echo "Stopping nodejs"
-	@docker container stop nodejs
-
-rmdb:
-	@docker container rm -f mariadb
-
-rmwp:
-	@docker container rm -f wordpress
-
-rmnginx:
-	@docker container rm -f nginx
-
-rmredis:
-	@docker container rm -f redis	
-
-rmpostfix:
-	@docker container rm -f postfix
-
-rmnodejs:
-	@docker container rm -f nodejs
-	
-rmftpserver:
-	@docker container rm -f ftpserver
-
-
-
-stopall: stopdb stopwp stopnginx stopredis stoppostfix stopnodejs
-
-rmall: rmdb rmwp rmnginx rmredis rmpostfix rmnodejs rmftpserver
+rmvolumes:
+	@sudo rm -rf ${mariadb_volumes} ${wordpress_volumes}

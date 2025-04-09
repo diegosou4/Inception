@@ -1,16 +1,13 @@
 FROM debian:bullseye
 LABEL maintainer='Diegmore'
 
-
-RUN apt-get update -y && \
+RUN apt-get update && \
     apt-get upgrade -y && \
-    apt-get install -y nodejs 
-
-COPY ./Profile ./app/
-
-WORKDIR /app
-
-CMD ["node", "index.js"]
+    apt-get install nodejs npm -y
 
 
-EXPOSE 3000
+
+
+CMD ["node", "/var/www/html/profile/index.js"]
+
+EXPOSE 4000

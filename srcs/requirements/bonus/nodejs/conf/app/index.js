@@ -3,13 +3,11 @@ const app = express();
 const { exec } = require('child_process');
 const path = require('path');
 const fs = require('fs');
+const dotenv = require('dotenv');
 
 
-// Verbos HTTP   
-// GET
-// POST
-// PUT
-// DELETE
+
+dotenv.config();
 
 app.use(express.json());
 
@@ -17,7 +15,7 @@ app.get('/api', (req, res) => {
     console.log('Received GET request at /api');
     const filePath = path.join(__dirname, '../files/resume_diego.pdf');
     fs.mkdirSync(path.dirname(filePath), { recursive: true });
-    exec(`wget --user=diegmore --password=42@Lisbon@pal ftp://ftpserver:21/resume_diego.pdf -O ${filePath}`, (err, stdout, stderr) => {
+    exec(`wget --user=${process.env.user_ftp} --password=${process.env.password_ftp} ftp://ftpserver:21/resume_diego.pdf -O ${filePath}`, (err, stdout, stderr) => {
     
         if(err) {
             console.error('wget error:', err);
@@ -40,11 +38,12 @@ app.get('/files', (req, res) => {
 
 app.post('/api', (req, res) => {
     let { name ,from, to, subject, message } = req.body;
-    const email = "diegoaguia33@gmail.com";
-    if( !name ||!from || !to || !subject || !message) {
+    const email = process.env.mail_postfix;
+    if( !name ||!from || !subject || !message) {
         res.status(400).send('Missing parameters');
         return;
     }
+    to = process.env.personal_email;
     console.log('Received POST request at /api');
     console.log('email:', from);
     console.log('To:', to);
